@@ -3,6 +3,7 @@ package com.example.codetribe.quizappv12;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,24 +13,32 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class Java extends AppCompatActivity {
 
     //Buttons
-    Button btnSubmit;
+    Button btnSubmit, stop;
     //RadioButtons
-    RadioButton answer1, answer2, answer3, answer4 ;
+    RadioButton answer1, answer2, answer3, answer4;
     RadioGroup rdGroup;
     //TextView
-    TextView lblQuestion, lblQuestionNumber, welcome, score, timmer;
+    TextView question, time, welcome, score, timer, qunum;
 
     private Questions mQuestion = new Questions();
     private String mAnswer;
-    private int mScore = 0;
-    private int mQuestionLength = mQuestion.myQuestions.length;
-
     Random r;
+    static int incrementV = 0, mScore = 0, qnumber = 1;
+    List<String> questionList = Arrays.asList(mQuestion.myQuestions);
+    List<String[]> answerList = Arrays.asList(mQuestion.myAnswers);
+    List<String> correctList = Arrays.asList(mQuestion.myCorrectAnswers);
+
+    CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,53 +54,81 @@ public class Java extends AppCompatActivity {
         rdGroup = (RadioGroup) findViewById(R.id.radGroup);
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
 
-        lblQuestion = (TextView) findViewById(R.id.ques);
-        lblQuestionNumber = (TextView) findViewById(R.id.qnum);
+        question = (TextView) findViewById(R.id.ques);
+        time = (TextView) findViewById(R.id.timmer);
         welcome = (TextView) findViewById(R.id.welcome);
         score = (TextView) findViewById(R.id.score);
-        timmer = (TextView)findViewById(R.id.timer);
+        qunum = (TextView) findViewById(R.id.qnum);
 
-        score.setText("Score: " + mScore);
-        updateQuestion(r.nextInt(mQuestionLength));
+        stop = (Button) findViewById(R.id.stop);
+
+        update();
         timer();
+        updateQuestion(questionList.indexOf(questionList.get(incrementV)));
+        score.setText("Score: " + mScore);
+        qunum.setText("Question: " + qnumber++);
 
+
+        //System.out.println(correctList.get(incrementV));
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                    if(answer1.getText() == mAnswer){
-                        mScore++;
-                        score.setText("Score: " + mScore);
-                        updateQuestion(r.nextInt(mQuestionLength));
+                if(qnumber <= 5){
+                    if(answer1.isChecked()){
+                        System.out.println("radio button 1"+answer1.getText().toString()+" Answer1: "+mAnswer);
+                        if(answer1.getText().toString().equalsIgnoreCase( mAnswer)){
+                            mScore++;
+                            score.setText("Score: " + mScore);
+                        }
+                        updateQuestion(questionList.indexOf(questionList.get(qnumber)));
+                        qunum.setText("Question: " + qnumber++);
                     }
-                    else if(answer2.getText() == mAnswer){
-                        mScore++;
-                        score.setText("Score: " + mScore);
-                        updateQuestion(r.nextInt(mQuestionLength));
+                    else if(answer2.isChecked()){
+                        System.out.println("radio button 2 "+answer2.getText().toString()+" Answer2: "+mAnswer);
+                        if(answer2.getText().toString().equalsIgnoreCase( mAnswer)){
+                            mScore++;
+                            score.setText("Score: " + mScore);
+                        }
+                        updateQuestion(questionList.indexOf(questionList.get(qnumber)));
+                        qunum.setText("Question: " + qnumber++);
                     }
-                    else if(answer3.getText() == mAnswer){
-                        mScore++;
-                        score.setText("Score: " + mScore);
-                        updateQuestion(r.nextInt(mQuestionLength));
+                    else if(answer3.isChecked()){
+                        System.out.println("radio button 3 "+answer3.getText().toString()+" Answer3: "+mAnswer);
+                        if(answer3.getText().toString().equalsIgnoreCase( mAnswer)){
+                            mScore++;
+                            score.setText("Score: " + mScore);
+                        }
+                        updateQuestion(questionList.indexOf(questionList.get(qnumber)));
+                        qunum.setText("Question: " + qnumber++);
                     }
-                    else if(answer4.getText() == mAnswer){
-                        mScore++;
-                        score.setText("Score: " + mScore);
-                        updateQuestion(r.nextInt(mQuestionLength));
-                    }else{
-                        Toast.makeText(getApplicationContext(), "Incorrect Answer", Toast.LENGTH_LONG).show();
+                    else if(answer4.isChecked()){
+                        System.out.println("radio button 4"+answer4.getText().toString()+" Answer4: "+mAnswer);
+                        if(answer4.getText().toString().equalsIgnoreCase( mAnswer)){
+                            mScore++;
+                            score.setText("Score: " + mScore);
+                        }
+                        updateQuestion(questionList.indexOf(questionList.get(qnumber)));
+                        qunum.setText("Question: " + qnumber++);
                     }
-
-                //gameOver();
-
-
+                }else{
+                    //GameOver
+                    countDownTimer.cancel();
+                    Intent i = new Intent(Java.this, Results.class);
+                    startActivity(i);
+                }
             }
         });
 
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                countDownTimer.cancel();
+            }
+        });
     }
 
-    private void updateQuestion(int num){
-        lblQuestion.setText(mQuestion.getQuestions(num));
+    private void updateQuestion(int num) {
+        question.setText(mQuestion.getQuestions(num));
 
         answer1.setText(mQuestion.getAnswer1(num));
         answer2.setText(mQuestion.getAnswer2(num));
@@ -99,43 +136,56 @@ public class Java extends AppCompatActivity {
         answer4.setText(mQuestion.getAnswer4(num));
 
         mAnswer = mQuestion.getCorrectAnswer(num);
+
     }
 
-    private void gameOver(){
+    void update() {
+        long x = System.nanoTime();
+        Collections.shuffle(questionList, new Random(x));
+        Collections.shuffle(answerList, new Random(x));
+        Collections.shuffle(correctList, new Random(x));
+    }
+
+    private void gameOver() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Java.this);
-        alertDialog.setMessage("Game Over! Your Score Is " + mScore + " points")
+        alertDialog.setTitle("Game Over");
+        alertDialog.setMessage("Game Over! You Score Is " + mScore + " points")
                 .setCancelable(false)
                 .setPositiveButton("NEW GAME",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                countDownTimer.cancel();
                                 startActivity(new Intent(getApplicationContext(), Java.class));
                             }
                         })
-        .setNegativeButton("EXIT", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            }
-        });
+                .setNegativeButton("EXIT", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
+                });
         AlertDialog alertDialog1 = alertDialog.create();
         alertDialog1.show();
     }
 
-    void timer(){
-        new CountDownTimer(60000, 100) {
+    void timer() {
+        countDownTimer = new CountDownTimer(60000, 100) {
 
             public void onTick(long millisUntilFinished) {
                 //TIME LEFT
-                lblQuestionNumber.setText("00:" + millisUntilFinished / 1000);
+                time.setText("Time " + millisUntilFinished / 1000);
             }
 
             public void onFinish() {
                 //GAME OVER!!!
                 gameOver();
             }
+
         }.start();
     }
+
+
 
 }

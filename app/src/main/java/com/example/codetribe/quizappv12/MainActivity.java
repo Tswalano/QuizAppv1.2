@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     Button java;
@@ -24,13 +26,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent j = new Intent(MainActivity.this, Java.class);
                 startActivity(j);
+
             }
         });
 
         android.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent a = new Intent(MainActivity.this, Java.class);
+                Intent a = new Intent(MainActivity.this, Android.class);
                 startActivity(a);
             }
         });

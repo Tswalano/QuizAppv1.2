@@ -1,5 +1,7 @@
 package com.example.codetribe.quizappv12;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Questions {
 
@@ -15,7 +17,7 @@ public class Questions {
            "Which of the following variable declarations and/or initializations are correct?" //a. int count = 5; quantity = 2; b. string name, label; c. boolean complete = "false"; d. boolean complete = true;
    };
 
-   private String myAnswers[][] = {
+   public String myAnswers[][] = {
            {"Java Development Kit", "Java Development Knowledge","Java Downloaded Kit","None Of The Above"},
            {"Java Video Mobility", "Java Value Money","Java Virtual Machine","None Of The Above"},
            {"Exponential", "Numbers","Logarithmic","Random"},
@@ -31,12 +33,12 @@ public class Questions {
            {"int count = 5; quantity = 2;","boolean complete = \"false\";","boolean complete = true", "string name, label;"},
     };
 
-    private String mCorrectAnswers[] = {
+    public String myCorrectAnswers[] = {
             "Java Development Kit",
             "Java Virtual Machine",
             "Numbers",
             "All Of The Above",
-            "There are 10 primitive types built in to the Java programming language.",
+            "There are 10 primitive types in Java",
             "string",
             "javac OrderClass.java",
             "public static void main(String[] args){ }",
@@ -69,8 +71,71 @@ public class Questions {
     }
 
     public String getCorrectAnswer(int a){
-        String cAnswer = mCorrectAnswers[a];
+        String cAnswer = myCorrectAnswers[a];
         return cAnswer;
     }
 
+    //--------------------------------------------------------------------------------------------//
+    ////////////////////////////////QUESTIONS FOR SECOND CATEGORY///////////////////////////////////
+    //--------------------------------------------------------------------------------------------//
+
+    public String cat2Questions[] = {
+            "What is the name of the Android Icon?",
+            "What are the basic requirements of creating Android Application?",
+            "What is the latest version of Android?",
+            "Who currently own Android?",
+            "What API level is Marshmallow",
+            "What is Android API Level 22",
+            "When was the first beta version of the Android released?"
+    };
+
+    public String cat2Answers[][] = {
+            {"Andy The Android","Android","Green Man","None of The Above"},
+            {"Java","Android","Java & XML","XML"},
+            {"KitKat","Lollipop","Marshmallow","Oreo"},
+            {"Google","SunMicrosoft","Oracle","Samsung"},
+            {"21","23","25","19"},
+            {"Lollipop","KitKat","Nougat","Marshmallow"},
+            {"1989","2007","2000","2010"},
+    };
+
+    public String cat2CorrectAnswers[] = {
+            "Andy The Android",
+            "Java & XML",
+            "Oreo",
+            "Google",
+            "23",
+            "Lollipop",
+            "2007",
+    };
+
+    public String getC2Questions(int a){
+        String question = cat2Questions[a];
+        return question;
+    }
+
+    public String getC2Answer1(int a){
+        String answer = cat2Answers[a][0];
+        return answer;
+    }
+
+    public String getC2Answer2(int a){
+        String answer = cat2Answers[a][1];
+        return answer;
+    }
+
+    public String getC2Answer3(int a){
+        String answer = cat2Answers[a][2];
+        return answer;
+    }
+
+    public String getC2Answer4(int a){
+        String answer = cat2Answers[a][3];
+        return answer;
+    }
+
+    public String getC2CorrectAnswer(int a){
+        String cAnswer = cat2CorrectAnswers[a];
+        return cAnswer;
+    }
 }
